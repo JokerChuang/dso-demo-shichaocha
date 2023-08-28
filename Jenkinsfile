@@ -77,19 +77,19 @@ pipeline {
       }
     }
 
-    stage('SAST') {
-      steps {
-        sh 'too long'
+    //stage('SAST') {
+      //steps {
+        //sh 'too long'
         //container('slscan') {
         //  sh 'scan --type java,depscan --build'
-        }
-      }
+        //}
+      //}
       //post {
       //  success {
       //    archiveArtifacts allowEmptyArchive: true, artifacts: 'reports/*', fingerprint: true, onlyIfSuccessful: true
       //  }
       //}
-    }
+    //}
 
     stage('Package') {
       parallel {
