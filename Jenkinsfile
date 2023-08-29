@@ -31,19 +31,19 @@ pipeline {
             }
           }
         }
-        //stage('Generate SBOM') {
-          //steps {
-            //container('maven') {
-              //sh 'mvn org.cyclonedx:cyclonedx-maven-plugin:makeAggregateBom'
-            //}
-          //}
-          //post {
-            //success {
-              //dependencyTrackPublisher projectName:'demo', projectVersion: '0.0.1', artifact: 'target/bom.xml', autoCreateProjects: true, synchronous: true
-              //archiveArtifacts allowEmptyArchive: true, artifacts: 'target/bom.xml', fingerprint: true, onlyIfSuccessful: true
-            //}
-          //}
-        //}
+        stage('Generate SBOM') {
+          steps {
+            container('maven') {
+              sh 'mvn org.cyclonedx:cyclonedx-maven-plugin:makeAggregateBom'
+            }
+          }
+          post {
+            success {
+              dependencyTrackPublisher projectName:'demo', projectVersion: '0.0.1', artifact: 'target/bom.xml', autoCreateProjects: true, synchronous: true
+              archiveArtifacts allowEmptyArchive: true, artifacts: 'target/bom.xml', fingerprint: true, onlyIfSuccessful: true
+            }
+          }
+        }
         stage('SCA') {
           steps {
             container('maven') {
@@ -57,7 +57,7 @@ pipeline {
               archiveArtifacts allowEmptyArchive: true,
               artifacts: 'target/dependency-check-report.html',
               fingerprint: true, onlyIfSuccessful: true
-              // dependencyCheckPublisher pattern: 'report.xml'
+               dependencyCheckPublisher pattern: 'report.xml'
             }
           }
         }
@@ -77,19 +77,19 @@ pipeline {
       }
     }
 
-    //stage('SAST') {
-      //steps {
-        //sh 'too long'
-        //container('slscan') {
-        //  sh 'scan --type java,depscan --build'
-        //}
-      //}
-      //post {
-      //  success {
-      //    archiveArtifacts allowEmptyArchive: true, artifacts: 'reports/*', fingerprint: true, onlyIfSuccessful: true
-      //  }
-      //}
-    //}
+    stage('SAST') {
+      steps {
+        sh 'too long'
+        container('slscan') {
+          sh 'scan --type java,depscan --build'
+        }
+      }
+      post {
+        success {
+          archiveArtifacts allowEmptyArchive: true, artifacts: 'reports/*', fingerprint: true, onlyIfSuccessful: true
+        }
+      }
+    }
 
     stage('Package') {
       parallel {
@@ -101,14 +101,14 @@ pipeline {
           }
         }
 
-        //stage('Docker BnP') {
-          //steps {
-            //container(name: 'kaniko') {
+        stage('Docker BnP') {
+          steps {
+            container(name: 'kaniko') {
               //sh '''/kaniko/executor --verbosity debug -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=docker.io/shichoc/dso-demo:latest'''
-              //sh '''/kaniko/executor --verbosity debug -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=docker.io/jokerchuang/dso-demo:latest'''
-            //}
-          //}
-        //}
+              sh '''/kaniko/executor --verbosity debug -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=docker.io/jokerchuang/dso-demo:latest'''
+            }
+          }
+        }
       }
     }
 
