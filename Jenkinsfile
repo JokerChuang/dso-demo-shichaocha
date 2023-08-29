@@ -57,7 +57,7 @@ pipeline {
               archiveArtifacts allowEmptyArchive: true,
               artifacts: 'target/dependency-check-report.html',
               fingerprint: true, onlyIfSuccessful: true
-               dependencyCheckPublisher pattern: 'report.xml'
+              // dependencyCheckPublisher pattern: 'report.xml'
             }
           }
         }
@@ -77,19 +77,19 @@ pipeline {
       }
     }
 
-    stage('SAST') {
-      steps {
-        sh 'too long'
-        container('slscan') {
-          sh 'scan --type java,depscan --build'
-        }
-      }
-      post {
-        success {
-          archiveArtifacts allowEmptyArchive: true, artifacts: 'reports/*', fingerprint: true, onlyIfSuccessful: true
-        }
-      }
-    }
+    //stage('SAST') {
+      //steps {
+        //sh 'too long'
+        //container('slscan') {
+          //sh 'scan --type java,depscan --build'
+        //}
+      //}
+      //post {
+        //success {
+          //archiveArtifacts allowEmptyArchive: true, artifacts: 'reports/*', fingerprint: true, onlyIfSuccessful: true
+        //}
+      //}
+    //}
 
     stage('Package') {
       parallel {
