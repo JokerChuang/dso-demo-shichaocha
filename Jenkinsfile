@@ -91,26 +91,26 @@ pipeline {
       //}
     //}
 
-    stage('Package') {
-      parallel {
-        stage('Create Jarfile') {
-          steps {
-            container(name: 'maven') {
-              sh 'mvn package -DskipTests'
-            }
+  stage('Package') {
+    parallel {
+      stage('Create Jarfile') {
+        steps {
+          container(name: 'maven') {
+            sh 'mvn package -DskipTests'
           }
         }
+      }
 
-        stage('Docker BnP') {
-          steps {
-            container(name: 'kaniko') {
-              //sh '''/kaniko/executor --verbosity debug -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=docker.io/shichoc/dso-demo:latest'''
-              sh '''/kaniko/executor --verbosity debug -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=docker.io/jokerchuang/dso-demo:latest'''
-            }
+      stage('Docker BnP') {
+        steps {
+          container(name: 'kaniko') {
+            //sh '''/kaniko/executor --verbosity debug -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=docker.io/shichoc/dso-demo:latest'''
+            sh '''/kaniko/executor --verbosity debug -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=docker.io/jokerchuang/dso-demo:latest'''
           }
         }
       }
     }
+  }
 
     stage('Deploy to Dev') {
       steps {
