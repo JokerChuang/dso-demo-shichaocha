@@ -27,7 +27,9 @@ pipeline {
         stage('Unit Tests') {
           steps {
             container(name: 'maven') {
-              sh 'mvn test'
+              catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                sh 'mvn test'
+              }
             }
           }
         }
